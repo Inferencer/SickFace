@@ -1,0 +1,7 @@
+tqdm
+matplotlib
+einops
+ffmpeg
+imageio[ffmpeg]
+imageio[pyav]
+gradio
