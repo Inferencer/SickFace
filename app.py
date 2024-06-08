@@ -31,7 +31,7 @@ def demo_ui(input_image_path, driving_video_path, movement_scale):
 
 input_image = gr.Image(label="Upload Input Image (512x512)", type="filepath")
 driving_video = gr.Video(label="Upload Driving Video (512x512)")
-movement_scale_option = gr.Radio(["Relative", "Absolute"], label="Movement Scale", default="Relative")
+movement_scale_option = gr.Radio(["Relative", "Absolute"], label="Movement Scale", value="Relative")
 
 with gr.Blocks() as demo_interface:
     with gr.Row():
