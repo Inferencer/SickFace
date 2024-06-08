@@ -4,6 +4,59 @@
 
 This repository focuses on portrait animation, specifically lip-synchronization via 3DMM control, but also allows for video-driven animation.
 
+## Overview
+
+I will update this repo with correct layout and intruction but this has been tested on python 3.10 with cuda 11.8 in annaconda windows
+## Setup
+Please complete the following steps.
+
+Clone the repository:
+
+```
+git clone https://github.com/andrerochow/fsrt.git
+cd fsrt
+```
+
+We recommend to create a new conda environment:
+
+```
+conda create -n fsrt python=3.9
+conda activate fsrt
+```
+
+### Dependencies
+
+This code requires at least Python 3.10 and PyTorch.
+
+ 1. Install [PyTorch](https://pytorch.org/get-started/locally/) (>= 1.12.0)
+    ```
+    conda install pytorch torchvision torchaudio pytorch-cuda=11.8 -c pytorch -c nvidia
+    ```
+ 2. Additional dependencies can be installed via:
+
+    ```
+    pip install -r requirements.txt
+    ```
+ 3. In case you want to animate with relative motion transfer and automatically find a best-matching frame, you need to install the face-alignment library:
+
+    ```
+    git clone https://github.com/1adrianb/face-alignment
+    cd face-alignment
+    pip install -r requirements.txt
+    python setup.py install
+    cd ..
+    ```
+  4. Run the gradio ui
+
+    python app.py
+    
+
+### Pretrained Checkpoints
+
+Pretrained models can be found at [google-drive](https://drive.google.com/drive/folders/1R9BuWM-kqPddriZtIVf5z3Yq14D4DDSP?usp=drive_link).
+
+The models should be downloaded and placed in ./checkpoints so `checkpoints/kp_detector.pt` & `checkpoints/vox256.pt`. Note that all pretrained checkpoints are trained using the same keypoint detector weights.
+
 ## Features
 
 ### Version 1 (V1)
