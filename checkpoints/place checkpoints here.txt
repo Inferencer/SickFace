@@ -1,0 +1,3 @@
+folder for kp_detector.pt and vox256.pt
+currently found here
+https://drive.google.com/drive/folders/1R9BuWM-kqPddriZtIVf5z3Yq14D4DDSP
