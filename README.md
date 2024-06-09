@@ -1,5 +1,7 @@
 # SickFace
-## [FOR HUGGINGFACE SPACE LINK CLICK ME](https://huggingface.co/spaces/Inferencer/SickFace)
+[![MasterHead](https://github.com/Inferencer/SickFace/blob/main/examples/repo%20imgs/SickFaceBanner.png?raw=false)](https://huggingface.co/spaces/Inferencer/SickFace)
+
+
 ## Overview
 
 This repository focuses on portrait animation, specifically lip-synchronization via 3DMM control, but also allows for video-driven animation.
