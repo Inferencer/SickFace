@@ -4,7 +4,7 @@
 
 This repository focuses on portrait animation, specifically lip-synchronization via 3DMM control, but also allows for video-driven animation.
 
-## Overview
+# Note:
 
 I will update this repo with correct layout and intruction but this has been tested on python 3.10 with cuda 11.8 in annaconda windows
 ## Setup
@@ -13,15 +13,15 @@ Please complete the following steps.
 Clone the repository:
 
 ```
-git clone https://github.com/andrerochow/fsrt.git
-cd fsrt
+git clone https://github.com/Inferencer/SickFace.git
+cd SickFace
 ```
 
 We recommend to create a new conda environment:
 
 ```
-conda create -n fsrt python=3.9
-conda activate fsrt
+conda create -n sickface python=3.10
+conda activate sickface
 ```
 
 ### Dependencies
@@ -37,16 +37,8 @@ This code requires at least Python 3.10 and PyTorch.
     ```
     pip install -r requirements.txt
     ```
- 3. In case you want to animate with relative motion transfer and automatically find a best-matching frame, you need to install the face-alignment library:
 
-    ```
-    git clone https://github.com/1adrianb/face-alignment
-    cd face-alignment
-    pip install -r requirements.txt
-    python setup.py install
-    cd ..
-    ```
-  4. Run the gradio ui
+  3. Run the gradio ui
 
     python app.py
     
