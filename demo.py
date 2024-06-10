@@ -153,7 +153,7 @@ if __name__ == "__main__":
     parser = ArgumentParser()
     parser.add_argument("--config", required=True, help="path to config")
     parser.add_argument("--checkpoint", default="./checkpoints/vox256.pt", help="path to checkpoint to restore")
-    parser.add_argument("--source_image", required=True, help="path to source (image or mp4)")
+    parser.add_argument("--source_images", nargs='+', required=True, help="paths to source images")
     parser.add_argument("--driving_video", default='driving.mp4', help="path to driving video")
     parser.add_argument("--result_video", default='result.mp4', help="path to output")
     parser.add_argument("--relative", dest="relative", action="store_true", help="use relative or absolute keypoint coordinates")
@@ -162,7 +162,6 @@ if __name__ == "__main__":
     parser.add_argument("--find_best_frame", dest="find_best_frame", action="store_true",
                         help="Generate from the frame that is the most aligned with source. (requires face_alignment lib)")
     parser.add_argument("--best_frame", dest="best_frame", type=int, default=None, help="Set frame to start from.")
-    parser.add_argument('--source_idx', nargs='+', help='Indices of the source images in the source video (e.g. 0 10 -1 for idx 0, idx 10, idx -1)', default='0')
     parser.add_argument("--cpu", dest="cpu", action="store_true", help="cpu mode (only for FaceAlignment keypoint extraction).")
     parser.add_argument("--audio", action="store_true", help="copy audio to output from the driving video", default=True)
     parser.add_argument("--max_num_pixels", default=32768, help="number of parallel processed pixels. Reduce this value if you run out of GPU memory!")
@@ -172,19 +171,8 @@ if __name__ == "__main__":
     parser.set_defaults(audio_on=False)
 
     opt = parser.parse_args()
-    opt.source_idx = [int(i) for i in opt.source_idx]
-    if opt.source_image[-4:] == '.mp4':
-        reader = imageio.get_reader(opt.source_image)
-        source_image = []
-        try:
-            for im in reader:
-                source_image.append(im)
-        except RuntimeError:
-            pass
-        reader.close()
-    else:
-        source_image = [imageio.imread(opt.source_image)]
-    source_image = [source_image[opt.source_idx[i]] for i in range(len(opt.source_idx))]
+
+    source_images = [imageio.imread(img_path) for img_path in opt.source_images]
     reader = imageio.get_reader(opt.driving_video)
     fps = reader.get_meta_data()['fps']
     driving_video = []
@@ -211,9 +199,9 @@ if __name__ == "__main__":
     decoder_module = model.decoder
     expression_encoder_module = model.expression_encoder
 
-    source_image = [resize(img, (256, 256))[..., :3] for img in source_image]
+    source_images = [resize(img, (256, 256))[..., :3] for img in source_images]
     driving_video = [resize(frame, (256, 256))[..., :3] for frame in driving_video]
-    source_image = np.array(source_image)
+    source_images = np.array(source_images)
 
     # Load the checkpoints
     checkpoint = Checkpoint('./', device='cuda:0', encoder=encoder_module,
@@ -221,15 +209,15 @@ if __name__ == "__main__":
     load_dict = checkpoint.load(opt.checkpoint)
 
     if opt.find_best_frame or opt.best_frame is not None:
-        i = opt.best_frame if opt.best_frame is not None else find_best_frame(source_image, driving_video, cpu=opt.cpu)
+        i = opt.best_frame if opt.best_frame is not None else find_best_frame(source_images, driving_video, cpu=opt.cpu)
         print("Best frame: " + str(i))
         driving_forward = driving_video[i:]
         driving_backward = driving_video[:(i+1)][::-1]
-        predictions_forward = make_animation(source_image, driving_forward, model, kp_detector, relative=opt.relative, adapt_movement_scale=opt.adapt_scale, cfg=cfg, max_num_pixels=opt.max_num_pixels)
-        predictions_backward = make_animation(source_image, driving_backward, model, kp_detector, relative=opt.relative, adapt_movement_scale=opt.adapt_scale, cfg=cfg, max_num_pixels=opt.max_num_pixels)
+        predictions_forward = make_animation(source_images, driving_forward, model, kp_detector, relative=opt.relative, adapt_movement_scale=opt.adapt_scale, cfg=cfg, max_num_pixels=opt.max_num_pixels)
+        predictions_backward = make_animation(source_images, driving_backward, model, kp_detector, relative=opt.relative, adapt_movement_scale=opt.adapt_scale, cfg=cfg, max_num_pixels=opt.max_num_pixels)
         predictions = predictions_backward[::-1] + predictions_forward[1:]
     else:
-        predictions = make_animation(source_image, driving_video, model, kp_detector, relative=opt.relative, adapt_movement_scale=opt.adapt_scale, cfg=cfg, max_num_pixels=opt.max_num_pixels)
+        predictions = make_animation(source_images, driving_video, model, kp_detector, relative=opt.relative, adapt_movement_scale=opt.adapt_scale, cfg=cfg, max_num_pixels=opt.max_num_pixels)
 
     imageio.mimsave(opt.result_video, [img_as_ubyte(frame) for frame in predictions], fps=fps)
 
@@ -238,4 +226,5 @@ if __name__ == "__main__":
             ffmpeg.output(ffmpeg.input(opt.result_video).video, ffmpeg.input(opt.driving_video).audio, output.name, c='copy').run()
             with open(opt.result_video, 'wb') as result:
                 copyfileobj(output, result)
+
 
