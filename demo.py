@@ -165,7 +165,7 @@ if __name__ == "__main__":
     parser.add_argument('--source_idx', nargs='+', help='Indices of the source images in the source video (e.g. 0 10 -1 for idx 0, idx 10, idx -1)', default='0')
     parser.add_argument("--cpu", dest="cpu", action="store_true", help="cpu mode (only for FaceAlignment keypoint extraction).")
     parser.add_argument("--audio", action="store_true", help="copy audio to output from the driving video", default=True)
-    parser.add_argument("--max_num_pixels", default=65536, help="number of parallel processed pixels. Reduce this value if you run out of GPU memory!")
+    parser.add_argument("--max_num_pixels", default=32768, help="number of parallel processed pixels. Reduce this value if you run out of GPU memory!")
 
     parser.set_defaults(relative=False)
     parser.set_defaults(adapt_scale=False)
