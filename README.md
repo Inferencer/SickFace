@@ -43,7 +43,18 @@ This code requires at least Python 3.10 and PyTorch.
   3. Run the gradio ui
 
     python app.py
-    
+
+Alternatively you can console commands using the following
+
+ ```
+python demo.py --checkpoint checkpoints/vox256.pt --config ./configs/vox256.yaml  --source_images ./examples/myimagefile.jpg --driving_video ./examples/mydriveingfile.mp4 --relative --adapt_scale --find_best_frame
+  ```
+If you wish to use more than one source image you are welcome to use up to three by adding more paths such as
+ ```
+python demo.py --checkpoint checkpoints/vox256.pt --config ./configs/vox256.yaml  --source_images ./examples/myimagefile.jpg ./examples/myimagefile2.jpg ./examples/myimagefile3.jpg --driving_video ./examples/drive.mp4 --relative --adapt_scale --find_best_frame
+
+  ```
+You can use different file formats such as .png if you so wish but before using multiple source image I reccomend reading this [issue](https://github.com/Inferencer/SickFace/issues/1) 
 
 ### Pretrained Checkpoints
 
