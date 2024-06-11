@@ -21,7 +21,7 @@ def run_demo(input_image_path, driving_video_path, movement_scale):
         raise ValueError("Driving video must be 30 seconds or less")
     
     # Construct and execute the command
-    command = f'python demo.py --checkpoint {checkpoint_path} --config {config_path} --source_image {input_image_path} --driving_video {driving_video_path} {movement_scale_option} --adapt_scale --find_best_frame'
+    command = f'python demo.py --checkpoint {checkpoint_path} --config {config_path} --source_image {input_image_path} --driving_video {driving_video_path} {movement_scale_option} --adapt_scale --find_best_frame --audio'
     os.system(command)
     
     # Path to the result video
