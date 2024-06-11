@@ -49,12 +49,12 @@ Alternatively you can console commands using the following
  ```
 python demo.py --checkpoint checkpoints/vox256.pt --config ./configs/vox256.yaml  --source_images ./examples/myimagefile.jpg --driving_video ./examples/mydriveingfile.mp4 --relative --adapt_scale --find_best_frame
   ```
-If you wish to use more than one source image you are welcome to use up to three by adding more paths such as
+If you wish to use more than one source image you are welcome to use up to two in total by adding another image path such as
  ```
-python demo.py --checkpoint checkpoints/vox256.pt --config ./configs/vox256.yaml  --source_images ./examples/myimagefile.jpg ./examples/myimagefile2.jpg ./examples/myimagefile3.jpg --driving_video ./examples/drive.mp4 --relative --adapt_scale --find_best_frame
+python demo.py --checkpoint checkpoints/vox256_2Source.pt --config ./configs/vox256.yaml  --source_images ./examples/myimagefile.jpg ./examples/myimagefile2.jpg --driving_video ./examples/drive.mp4 --relative --adapt_scale --find_best_frame
 
   ```
-You can use different file formats such as .png if you so wish but before using multiple source image I reccomend reading this [issue](https://github.com/Inferencer/SickFace/issues/1) 
+You can use different file formats such as .png if you so wish but before using multiple source image I reccomend reading this [issue](https://github.com/Inferencer/SickFace/issues/1) you will also notice the checkpoint has changed to vox256_2Source.pt
 
 ### Pretrained Checkpoints
 
