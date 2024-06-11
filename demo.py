@@ -8,6 +8,7 @@ from skimage.transform import resize
 from skimage import img_as_ubyte
 import torch
 import ffmpeg
+import os
 from os.path import splitext
 from shutil import copyfileobj
 from tempfile import NamedTemporaryFile
@@ -149,6 +150,7 @@ def find_best_frame(source, driving, cpu=False):
             frame_num = i
     return frame_num
 
+
 if __name__ == "__main__":
     parser = ArgumentParser()
     parser.add_argument("--config", required=True, help="path to config")
@@ -219,12 +221,17 @@ if __name__ == "__main__":
     else:
         predictions = make_animation(source_images, driving_video, model, kp_detector, relative=opt.relative, adapt_movement_scale=opt.adapt_scale, cfg=cfg, max_num_pixels=opt.max_num_pixels)
 
-    imageio.mimsave(opt.result_video, [img_as_ubyte(frame) for frame in predictions], fps=fps)
+    # Save the animation to a temporary video file
+    result_video_temp = "temp_" + opt.result_video
+    imageio.mimsave(result_video_temp, [img_as_ubyte(frame) for frame in predictions], fps=fps)
 
     if opt.audio:
-        with NamedTemporaryFile(suffix='.' + splitext(opt.result_video)[1]) as output:
-            ffmpeg.output(ffmpeg.input(opt.result_video).video, ffmpeg.input(opt.driving_video).audio, output.name, c='copy').run()
-            with open(opt.result_video, 'wb') as result:
-                copyfileobj(output, result)
+        # Combine the temporary video and the audio from the driving video
+        video_input = ffmpeg.input(result_video_temp)
+        audio_input = ffmpeg.input(opt.driving_video)
+        ffmpeg.output(video_input.video, audio_input.audio, opt.result_video, vcodec='copy', acodec='aac', audio_bitrate='192k', strict='experimental').global_args('-y').run()
+    else:
+        # If no audio, just save the temporary video as the final result
+        os.rename(result_video_temp, opt.result_video)
 
 
