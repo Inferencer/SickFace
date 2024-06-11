@@ -6,3 +6,4 @@ imageio[ffmpeg]
 imageio[pyav]
 gradio
 face_alignment
+moviepy
